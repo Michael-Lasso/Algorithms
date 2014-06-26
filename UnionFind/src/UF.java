@@ -3,6 +3,7 @@ public class UF {
 	/**
 	 * @param args
 	 */
+	 //
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		QuickUnionIUF uf = new QuickUnionIUF(10);
