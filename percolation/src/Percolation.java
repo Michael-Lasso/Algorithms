@@ -7,15 +7,18 @@ public class Percolation {
 	private Random rand = new Random();
 	private int probability = 0;
 	private int len;
+	private int[] isOpen;
 
 	// create N-by-N grid, with all sites blocked
 	public Percolation(int N) {
 		this.grid = new int[(N * N) + 2];
 		this.sz = new int[(N * N) + 2];
+		this.isOpen = new int[(N * N)];
 		this.len = N;
 		for (int i = 0; i < this.grid.length - 2; i++) {
-			this.grid[i] = -1;
+			this.grid[i] = i;
 			sz[i] = 1;
+			this.isOpen[i] = -1;
 		}
 		this.grid[(len * len)] = len - 1;// virtual top
 		this.grid[(len * len) + 1] = len - 2;// virtual bottom
@@ -42,7 +45,9 @@ public class Percolation {
 				// open square
 				System.out.println("is not open");
 				this.grid[i * len + j] = i * len + j;
+				this.isOpen[i * len + j] = 1;
 				this.probability++;
+				connect(2,3);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println(e + " out of bounds");
@@ -55,16 +60,7 @@ public class Percolation {
 		try {
 			int o = i * this.len + j;
 			System.out.println("\nrow/column" + i + "/" + j + " : " + o);
-			return (this.grid[o] == -1) ? false : true;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println(e + " out of bounds");
-		}
-		return false;
-	}
-
-	public boolean isOpen(int i) {
-		try {
-			return (this.grid[i] == -1) ? false : true;
+			return (this.isOpen[o] == -1) ? false : true;
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println(e + " out of bounds");
 		}
@@ -116,12 +112,6 @@ public class Percolation {
 		}
 	}
 
-	public void displayTree() {
-		for (int i = 0; i < grid.length; i++) {
-			System.out.print(grid[i] + "\t");
-		}
-	}// end of displayTree method
-
 	/*
 	 * function to start percolation
 	 */
@@ -134,20 +124,6 @@ public class Percolation {
 
 			open(row, col);
 		}
-	}
-
-	public void display() {
-		for (int i = 0; i < this.len; i++) {
-			for (int j = 0; j < this.len; j++) {
-				if (this.grid[(i * this.len) + j] == -1) {
-					System.out.print("- ");
-				} else {
-					System.out.print("o ");
-				}
-			}
-			System.out.println();
-		}
-
 	}
 
 	// row i, col j connects to its adjacents
@@ -163,11 +139,34 @@ public class Percolation {
 			if (isOpen(i, j - 1))
 				union(o, o - 1);
 			if (isOpen(i + 1, j))
-				union(o, o);
+				union(o, o + this.len);
 			if (isOpen(i - 1, j))
-				union(o, o);
+				union(o, o - this.len);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println(e + " out of bounds");
 		}
+	}
+
+	public void displayTable() {
+		for (int i = 0; i < this.len; i++) {
+			for (int j = 0; j < this.len; j++) {
+				System.out.print("\t" + this.grid[(this.len * i) + j] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	public void display() {
+		for (int i = 0; i < this.len; i++) {
+			for (int j = 0; j < this.len; j++) {
+				if (this.isOpen[(i * this.len) + j] == -1) {
+					System.out.print("- ");
+				} else {
+					System.out.print("o ");
+				}
+			}
+			System.out.println();
+		}
+
 	}
 }
