@@ -44,10 +44,9 @@ public class Percolation {
 			} else {
 				// open square
 				System.out.println("is not open");
-				this.grid[i * len + j] = i * len + j;
 				this.isOpen[i * len + j] = 1;
 				this.probability++;
-				connect(2,3);
+				connect(i, j);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println(e + " out of bounds");
@@ -129,19 +128,29 @@ public class Percolation {
 	// row i, col j connects to its adjacents
 	public void connect(int i, int j) {
 		int o = (i * this.len) + j;
-		if (i == 0)
-			union(i, this.grid[len * len]);
-		if (i == this.len - 1)
-			union(i, this.grid[(len * len) + 1]);
+		if (i == 0) {
+			// union(i, this.grid[len * len]);
+		}
+		if (i == this.len - 1) {
+			// union(i, this.grid[(len * len) + 1]);
+		}
 		try {
-			if (isOpen(i, j + 1))
+			if (isOpen(i, j + 1)) {
+				System.out.println("first " + i + "/" + j);
 				union(o, o + 1);
-			if (isOpen(i, j - 1))
+			}
+			if (isOpen(i, j - 1)) {
+				System.out.println("second " + i + "/" + j);
 				union(o, o - 1);
-			if (isOpen(i + 1, j))
+			}
+			if (isOpen(i + 1, j)) {
+				System.out.println("third " + i + "/" + j);
 				union(o, o + this.len);
-			if (isOpen(i - 1, j))
+			}
+			if (isOpen(i - 1, j)) {
+				System.out.println("fourth " + i + "/" + j);
 				union(o, o - this.len);
+			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println(e + " out of bounds");
 		}
