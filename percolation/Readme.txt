@@ -1,0 +1,3 @@
+-library.algorithms package is the standard algorithms given.
+-algorithms package is a work in progress. This is the implementation of algorithms in library.algorithms package.
+-problems package is from the projecteuler.net web site.
