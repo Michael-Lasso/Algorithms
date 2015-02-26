@@ -13,26 +13,6 @@ public class PercolationStats {
 	// public double confidenceHi()
 	public static void main(String[] args) {
 		Percolation percolate = new Percolation(5);
-		percolate.open(0, 0);
-		percolate.open(1, 0);
-		percolate.open(3, 3);
-		percolate.open(4, 3);
-		percolate.open(3, 2);
-		percolate.open(2, 0);
-		percolate.open(3, 1);
-		percolate.open(3, 0);
-		percolate.open(1, 3);
-		percolate.display();
-
-		percolate.displayTable();
-
-		if (percolate.connected(8, 0)) {
-			System.out.println("they are connected");
-		} else {
-			System.out.println("they are not connected");
-		}
-		// System.out.println(percolate.getLen()+" / "+
-		// percolate.getGrid().length);
 
 	}
 
