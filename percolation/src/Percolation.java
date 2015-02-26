@@ -3,11 +3,12 @@ import java.util.Random;
 public class Percolation {
 	private QuickFindUF uf;
 	private Random rand = new Random();
-	private int probability = 0;
+	private double probability = 0;
 	private int len;
 	private boolean[] isOpen;
 	private int top;
 	private int bottom;
+	private int size;
 
 	// TODO connect top nodes to virtual top and vice-versa (check)
 	// test findPosition and replace values for function (check)
@@ -18,6 +19,7 @@ public class Percolation {
 
 	// create N-by-N grid, with all sites blocked
 	public Percolation(int N) {
+		size = N;
 		this.len = (N * N) + 2;
 		this.isOpen = new boolean[len];
 		this.uf = new QuickFindUF(len);
@@ -37,35 +39,29 @@ public class Percolation {
 		this.isOpen[bottom] = true;
 	}
 
-	public int getProbability() {
-		return probability;
+	public double getProbability() {
+		return probability / (size * size);
 	}
 
 	public int getLen() {
 		return len;
 	}
 
-	public void checkAdjacents(int i, int j) {
-		double size = Math.floor(Math.sqrt((double) len));
-		int len = (int) size;
-		System.out.print("connections: ");
-		if (this.isOpen(i + 1, j) && (findPosition(i, j) + len) != top) {
-			this.uf.union(findPosition(i, j), (findPosition(i, j) + len));
-			System.out.print((findPosition(i, j) + 1) + " -1- " + i + "/" + j);
-		}
-		if (this.isOpen(i, j + 1)) {
-			this.uf.union(findPosition(i, j), findPosition(i, j) + 1);
-			System.out.print((findPosition(i, j) + 1) + " ");
+	public void checkAdjacents(int i, int j)
+			throws ArrayIndexOutOfBoundsException {
+		int len = size;
+		if (this.isOpen(i + 1, j) && ((findPosition(i + 1, j)) < top)) {
+			this.uf.union(findPosition(i, j), (findPosition(i + 1, j)));
 		}
 		if (this.isOpen(i - 1, j)) {
 			this.uf.union(findPosition(i, j), (findPosition(i, j) - len));
-			System.out.print((findPosition(i, j) - len) + " ");
 		}
-		if (this.isOpen(i, j - 1)) {
+		if (this.isOpen(i, j + 1) && (findPosition(i, j + 1) % len != 0)) {
+			this.uf.union(findPosition(i, j), findPosition(i, j) + 1);
+		}
+		if (this.isOpen(i, j - 1) && (findPosition(i, j) % len != 0)) {
 			this.uf.union(findPosition(i, j), (findPosition(i, j) - 1));
-			System.out.print((findPosition(i, j) - 1));
 		}
-		System.out.println();
 	}
 
 	// open site (row i, column j) if it is not already
@@ -79,20 +75,26 @@ public class Percolation {
 				checkAdjacents(i, j);
 			}
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println(e + " out of bounds in open function");
 		}
 	}
 
 	// is site (row i, column j) open?
 	public boolean isOpen(int i, int j) {
-		int position = findPosition(i, j);
-		return this.isOpen[position];
+		try {
+			int position = findPosition(i, j);
+			return this.isOpen[position];
+		} catch (ArrayIndexOutOfBoundsException e) {
+		}
+		return false;
 	}
 
 	// is site (row i, column j) full? connected to top
 	public boolean isFull(int i, int j) {
 		int position = findPosition(i, j);
-		return this.uf.connected(top, position);
+		if (position < len - 2) {
+			return this.uf.connected(top, position);
+		}
+		return false;
 	}
 
 	/*
@@ -104,48 +106,38 @@ public class Percolation {
 	}
 
 	public void start() {
-
-		int size = (int) Math.floor(Math.sqrt((double) len));
 		while (!percolates()) {
 			int row = rand.nextInt(size);
 			int col = rand.nextInt(size);
 			open(row, col);
-			System.out.println(findPosition(row, col));
 		}
-		System.out.println(percolates());
 	}
 
 	private int findPosition(int i, int j) {
-		double size = Math.floor(Math.sqrt((double) len));
 		double position = (i * size) + j;
 		return (int) position;
 	}
 
-	private void displayTable() {
-		double size = Math.floor(Math.sqrt((double) len));
+	public void displayTable() {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				System.out.print("-" + (isOpen(i, j) ? "X" : "O"));
+				if (isFull(i, j) && isOpen(i, j)) {
+					System.out.print("-A");
+				} else {
+					System.out.print("-" + (isOpen(i, j) ? "X" : "O"));
+				}
 			}
 			System.out.print("\t\t");
 			for (int j = 0; j < size; j++) {
 				int position = findPosition(i, j);
-				System.out.print("-" + this.uf.find(position));
+				System.out
+						.print("  "
+								+ ((this.uf.find(position) < 10) ? (this.uf
+										.find(position) + " ") : this.uf
+										.find(position)));
 			}
 			System.out.println();
 		}
-	}
-
-	public static void main(String[] args) {
-		Percolation p = new Percolation(6);
-		p.start();
-		// p.uf.union(0, 5);
-
-		// p.open(5, 0);
-		// System.out.println(p.percolates());
-		// System.out.println(p.findPosition(5, 0));
-
-		p.displayTable();
-		// System.out.println(p.isFull(0, 0));
+		System.out.println("probability is: " + probability);
 	}
 }

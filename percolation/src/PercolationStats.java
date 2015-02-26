@@ -3,17 +3,26 @@ public class PercolationStats {
 	/**
 	 * @param args
 	 */
-	// public PercolationStats(int N, int T) // perform T independent
-	// computational experiments on an N-by-N grid
-	// public double mean() // sample mean of percolation threshold
-	// public double stddev() // sample standard deviation of percolation
-	// threshold
-	// public double confidenceLo() // returns lower bound of the 95% confidence
-	// interval
-	// public double confidenceHi()
-	public static void main(String[] args) {
-		Percolation percolate = new Percolation(5);
+	private double mean;
 
+	public PercolationStats(int N, int T) {
+		double sum = 0;
+		for (int i = 0; i < T; i++) {
+			Percolation percolation = new Percolation(N);
+			percolation.start();
+			sum += percolation.getProbability();
+			System.out.println("test: " + i);
+		}
+		mean = sum / T;
+
+	} // perform T independent experiments on an N-by-N grid
+
+	public double mean() {
+		return mean;
+	}
+	public static void main(String[] args) {
+		PercolationStats p = new PercolationStats(200, 100);
+		System.out.println(p.mean);
 	}
 
 }
