@@ -13,13 +13,6 @@ public class Percolation {
 	private int bottom;
 	private int size;
 
-	// TODO connect top nodes to virtual top and vice-versa (check)
-	// test findPosition and replace values for function (check)
-	// check adjacent nodes if open (check)
-	// found bug on start function, it percolates every time 36 is open
-	// open nodes that are not open
-	// are nodes connected to top
-
 	// create N-by-N grid, with all sites blocked
 	public Percolation(int N) {
 		size = N;
