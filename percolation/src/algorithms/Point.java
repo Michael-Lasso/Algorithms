@@ -6,19 +6,25 @@ import library.algorithms.StdDraw;
 public class Point implements Comparable<Point> {
 
 	// compare points by slope
-	public final Comparator<Point> SLOPE_ORDER = new BySlope();
+	public final Comparator<Point> SLOPE_ORDER = new Comparator<Point>() {
+
+		@Override
+		public int compare(final Point q, final Point r) {
+			final Point t = Point.this;
+			final double qSlope = t.slopeTo(q);
+			final double rSlope = t.slopeTo(r);
+			if (qSlope < rSlope) {
+				return -1;
+			} else if (qSlope == rSlope) {
+				return 0;
+			} else {
+				return 1;
+			}
+		}
+	};
 
 	private final int x; // x coordinate
 	private final int y; // y coordinate
-
-	private static class BySlope implements Comparator<Point> {
-
-		@Override
-		public int compare(Point p1, Point p2) {
-			return p1.compareTo(p2);
-		}
-
-	}
 
 	// create the point (x, y)
 	public Point(int x, int y) {
@@ -38,12 +44,17 @@ public class Point implements Comparable<Point> {
 
 	// slope between this point and that point
 	public double slopeTo(Point p1) {
-		double slope = (p1.y - this.y) / (p1.x - this.x);
-		if (slope == 0) {
-			slope = (this.y == p1.y) ? 0 : 0;
-			slope = (this.y == p1.y) ? 0 : 0;
-			slope = (this.equals(p1)) ? 0 : 0;
+		double slope;
+		if (compareTo(p1) == 0) {
+			slope = Double.NEGATIVE_INFINITY;
+		} else if (this.y == p1.y) {
+			slope = Double.NaN;
+		} else if (this.x == p1.x) {
+			slope = Double.POSITIVE_INFINITY;
+		} else {
+			slope = (p1.y - this.y) / (p1.x - this.x);
 		}
+
 		return slope;
 	}
 
@@ -66,6 +77,10 @@ public class Point implements Comparable<Point> {
 
 	// unit test
 	public static void main(String[] args) {
-
+		Point p1 = new Point(1, 1);
+		Point p2 = new Point(1, 1);
+		System.out.println(p1.compareTo(p2));
+		System.out
+				.println(Double.POSITIVE_INFINITY == Double.NEGATIVE_INFINITY);
 	}
 }
