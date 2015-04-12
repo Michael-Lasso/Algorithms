@@ -48,11 +48,13 @@ public class Point implements Comparable<Point> {
 		if (compareTo(p1) == 0) {
 			slope = Double.NEGATIVE_INFINITY;
 		} else if (this.y == p1.y) {
-			slope = Double.NaN;
+			slope = 0.0;
 		} else if (this.x == p1.x) {
 			slope = Double.POSITIVE_INFINITY;
 		} else {
-			slope = (p1.y - this.y) / (p1.x - this.x);
+			double top = (p1.y - this.y);
+			double bottom = (p1.x - this.x);
+			slope = top / bottom;
 		}
 
 		return slope;
