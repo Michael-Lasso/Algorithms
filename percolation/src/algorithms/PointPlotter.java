@@ -8,7 +8,7 @@ import library.algorithms.StdDraw;
 
 public class PointPlotter {
 
-	public final static String FILENAME = "input8.txt";
+	public final static String FILENAME = "input6.txt";
 
 	public static List<Point> DrawAndGetPointsFromFile(String filename) {
 
