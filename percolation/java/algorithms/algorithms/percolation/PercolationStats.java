@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.percolation;
 
 public class PercolationStats {
 

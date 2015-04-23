@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.patterns;
 
 import java.util.Comparator;
 import library.algorithms.StdDraw;

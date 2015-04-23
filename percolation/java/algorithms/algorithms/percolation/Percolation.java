@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.percolation;
 
 import java.util.Random;
 import library.algorithms.*;

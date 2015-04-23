@@ -1,4 +1,4 @@
-package algorithms;
+package algorithms.stacks;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

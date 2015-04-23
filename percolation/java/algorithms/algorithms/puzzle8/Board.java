@@ -26,11 +26,14 @@ public class Board {
 
 	// is this board the goal board?
 	public boolean isGoal() {
+		// TODO
 		int N = dimension();
 		for (int row = 0; row < N; row++) {
 			for (int col = 0; col < N; col++) {
 				int valueExpected = ((row * N) + col) + 1;
-				if (blocks[row][col] != valueExpected) {
+				if ((row + col) == ((N * N) - 1)) {
+					System.out.println("TEST" + (row + col));
+				} else if (blocks[row][col] != valueExpected) {
 					return false;
 				}
 			}
@@ -57,17 +60,34 @@ public class Board {
 	// string representation of this board (in the output format specified
 	// below)
 	public String toString() {
-		for (int i = 0; i < blocks.length; i++) {
-
+		int N = dimension();
+		StringBuilder board = new StringBuilder();
+		for (int row = 0; row < N; row++) {
+			for (int col = 0; col < N; col++) {
+				board.append(blocks[row][col] + " ");
+			}
+			board.append("\n");
 		}
-		return "";
+		return board.toString();
+	}
+
+	public static int[][] populateGrid(int N) {
+		int[][] grid = new int[N][N];
+		for (int row = 0; row < N; row++) {
+			for (int col = 0; col < N; col++) {
+				grid[row][col] = ((row * N) + col) + 1;
+			}
+		}
+		grid[2][2] = 0;
+		return grid;
 	}
 
 	// unit tests (not graded)
 	public static void main(String[] args) {
-		int[][] test = new int[4][4];
+		int[][] test = Board.populateGrid(3);
 		Board b = new Board(test);
-		System.out.println(b.blocks.length);
+		System.out.println(b.toString());
+		System.out.println(b.isGoal());
 
 	}
 }
