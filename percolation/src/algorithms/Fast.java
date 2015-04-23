@@ -20,7 +20,6 @@ public class Fast {
 				Collections.sort(sortedPoints, points.get(i).SLOPE_ORDER);
 
 				displaySlope(points.get(i), sortedPoints);
-				// TODO input another for loop to check for 3 consecutive slopes
 			}
 		} catch (IndexOutOfBoundsException e) {
 		}
