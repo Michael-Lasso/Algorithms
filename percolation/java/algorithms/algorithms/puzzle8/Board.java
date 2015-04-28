@@ -22,7 +22,7 @@ public class Board {
 			for (int col = 0; col < N; col++) {
 				int valueExpected = ((row * N) + col) + 1;
 				if (((row + 1) * (1 + col)) - 1 == ((N * N) - 1)) {
-					hamming += (blocks[row][col] == 0) ? 0 : 1;
+					// do nothing, last position
 				} else if (blocks[row][col] != valueExpected) {
 					hamming++;
 				}
@@ -32,8 +32,22 @@ public class Board {
 	}
 
 	// sum of Manhattan distances between blocks and goal
+	// manhattan = floor(ABS(value-expected)/N)+(ABS(value-expected)%N)
 	public int manhattan() {
-		return 0;
+		int N = dimension();
+		int manhattan = 0;
+		for (int row = 0; row < N; row++) {
+			for (int col = 0; col < N; col++) {
+				int valueExpected = ((row * N) + col) + 1;
+				if (((row + 1) * (1 + col)) - 1 == ((N * N) - 1)) {
+					// do nothing, last position
+				} else if (blocks[row][col] != valueExpected) {
+					int pos = Math.abs(blocks[row][col]);
+					manhattan += Math.floor(pos / N) + pos % N;
+				}
+			}
+		}
+		return manhattan;
 	}
 
 	// is this board the goal board?
@@ -52,7 +66,7 @@ public class Board {
 		return true;
 	}
 
-	// a boadr that is obtained by exchanging two adjacent blocks in the same
+	// a board that is obtained by exchanging two adjacent blocks in the same
 	// row
 	public Board twin() {
 		return null;
@@ -89,8 +103,8 @@ public class Board {
 				grid[row][col] = ((row * N) + col) + 1;
 			}
 		}
-		grid[2][2] = 2;
-		grid[2][1] = 3;
+		grid[1][2] = 2;
+		grid[0][1] = 6;
 		return grid;
 	}
 
@@ -101,6 +115,7 @@ public class Board {
 		System.out.println(b.toString());
 		System.out.println(b.isGoal());
 		System.out.println("hamming is: " + b.hamming());
+		System.out.println("manhattan is: " + b.manhattan());
 
 	}
 }
