@@ -16,7 +16,19 @@ public class Board {
 
 	// number of blocks out of place
 	public int hamming() {
-		return 0;
+		int N = dimension();
+		int hamming = 0;
+		for (int row = 0; row < N; row++) {
+			for (int col = 0; col < N; col++) {
+				int valueExpected = ((row * N) + col) + 1;
+				if (((row + 1) * (1 + col)) - 1 == ((N * N) - 1)) {
+					hamming += (blocks[row][col] == 0) ? 0 : 1;
+				} else if (blocks[row][col] != valueExpected) {
+					hamming++;
+				}
+			}
+		}
+		return hamming;
 	}
 
 	// sum of Manhattan distances between blocks and goal
@@ -26,13 +38,12 @@ public class Board {
 
 	// is this board the goal board?
 	public boolean isGoal() {
-		// TODO
 		int N = dimension();
 		for (int row = 0; row < N; row++) {
 			for (int col = 0; col < N; col++) {
 				int valueExpected = ((row * N) + col) + 1;
-				if ((row + col) == ((N * N) - 1)) {
-					System.out.println("TEST" + (row + col));
+				if (((row + 1) * (1 + col)) - 1 == ((N * N) - 1)) {
+
 				} else if (blocks[row][col] != valueExpected) {
 					return false;
 				}
@@ -78,7 +89,8 @@ public class Board {
 				grid[row][col] = ((row * N) + col) + 1;
 			}
 		}
-		grid[2][2] = 0;
+		grid[2][2] = 2;
+		grid[2][1] = 3;
 		return grid;
 	}
 
@@ -88,6 +100,7 @@ public class Board {
 		Board b = new Board(test);
 		System.out.println(b.toString());
 		System.out.println(b.isGoal());
+		System.out.println("hamming is: " + b.hamming());
 
 	}
 }
