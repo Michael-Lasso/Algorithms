@@ -1,5 +1,8 @@
 package algorithms.puzzle8;
 
+import library.algorithms.In;
+import library.algorithms.StdOut;
+
 public class Solver {
 	Board initial;
 
@@ -25,5 +28,29 @@ public class Solver {
 
 	// solve a slider puzzle (given below)
 	public static void main(String[] args) {
+
+		// create initial board from file
+		In in = new In("puzzle04.txt");
+		int N = in.readInt();
+		int[][] blocks = new int[N][N];
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				blocks[i][j] = in.readInt();
+		Board initial = new Board(blocks);
+		initial.test();
+
+		// solve the puzzle
+		Solver solver = new Solver(initial);
+
+/*		// print solution to standard output
+		if (!solver.isSolvable()) {
+			StdOut.println("No solution possible");
+		} else {
+			StdOut.println("Minimum number of moves = " + solver.moves());
+			for (Board board : solver.solution()) {
+				StdOut.println(board);
+			}
+		}*/
 	}
+
 }
