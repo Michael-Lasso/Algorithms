@@ -1,5 +1,6 @@
 package algorithms.puzzle8;
 
+import algorithms.constants.Constants;
 import library.algorithms.In;
 import library.algorithms.StdOut;
 
@@ -30,7 +31,7 @@ public class Solver {
 	public static void main(String[] args) {
 
 		// create initial board from file
-		In in = new In("puzzle04.txt");
+		In in = new In(Constants.PUZZLE);
 		int N = in.readInt();
 		int[][] blocks = new int[N][N];
 		for (int i = 0; i < N; i++)
@@ -42,15 +43,12 @@ public class Solver {
 		// solve the puzzle
 		Solver solver = new Solver(initial);
 
-/*		// print solution to standard output
-		if (!solver.isSolvable()) {
-			StdOut.println("No solution possible");
-		} else {
-			StdOut.println("Minimum number of moves = " + solver.moves());
-			for (Board board : solver.solution()) {
-				StdOut.println(board);
-			}
-		}*/
+		/*
+		 * // print solution to standard output if (!solver.isSolvable()) {
+		 * StdOut.println("No solution possible"); } else {
+		 * StdOut.println("Minimum number of moves = " + solver.moves()); for
+		 * (Board board : solver.solution()) { StdOut.println(board); } }
+		 */
 	}
 
 }
