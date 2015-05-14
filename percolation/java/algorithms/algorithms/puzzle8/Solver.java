@@ -1,15 +1,29 @@
 package algorithms.puzzle8;
 
-import algorithms.constants.Constants;
 import library.algorithms.In;
-import library.algorithms.StdOut;
+import library.algorithms.MinPQ;
+import algorithms.constants.Constants;
 
 public class Solver {
 	Board initial;
+	int moves;
 
 	// find a solution to the initial board (using the A* algorithm)
 	public Solver(Board initial) {
 		this.initial = initial;
+		compute(initial);
+	}
+
+	private void compute(Board initial) {
+		MinPQ<Board> p = new MinPQ<Board>();
+		p.insert(initial);
+		System.out.println("+++Initial board+++");
+		initial.test();
+		for (Board b : initial.neighbors()) {
+			p.insert(b);
+		}
+		System.out.println("+++Last board+++");
+		p.delMin().test();
 	}
 
 	// is the initial board solvable?
@@ -19,7 +33,7 @@ public class Solver {
 
 	// min number of moves to solve initial board; -1 if unsolvable
 	public int moves() {
-		return 0;
+		return moves;
 	}
 
 	// sequence of boards in a shortest solution; null if unsolvable
@@ -38,7 +52,6 @@ public class Solver {
 			for (int j = 0; j < N; j++)
 				blocks[i][j] = in.readInt();
 		Board initial = new Board(blocks);
-		initial.test();
 
 		// solve the puzzle
 		Solver solver = new Solver(initial);

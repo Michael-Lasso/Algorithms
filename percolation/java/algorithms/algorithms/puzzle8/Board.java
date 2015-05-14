@@ -4,15 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Board {
+public class Board implements Comparable<Board> {
 	int[][] blocks;
 	int N;
+	int manhattan;
+	int hamming;
 
 	// construct a board from an N-by-N array of blocks (where blocks[i][j] =
 	// block in row i, column j)
 	public Board(int[][] blocks) {
 		this.blocks = blocks;
 		N = blocks.length;
+		calcHamming();
+		calcManhattan();
 	}
 
 	// board dimension N
@@ -21,8 +25,7 @@ public class Board {
 	}
 
 	// number of blocks out of place
-	public int hamming() {
-		int hamming = 0;
+	private void calcHamming() {
 		for (int row = 0; row < N; row++) {
 			for (int col = 0; col < N; col++) {
 				int valueExpected = ((row * N) + col) + 1;
@@ -33,12 +36,14 @@ public class Board {
 				}
 			}
 		}
+	}
+
+	public int hamming() {
 		return hamming;
 	}
 
 	// sum of Manhattan distances between blocks and number of moves
-	public int manhattan() {
-		int manhattan = 0;
+	private void calcManhattan() {
 		for (int row = 0; row < N; row++) {
 			for (int col = 0; col < N; col++) {
 				int valueExpected = ((row * N) + col) + 1;
@@ -52,6 +57,9 @@ public class Board {
 				}
 			}
 		}
+	}
+
+	public int manhattan() {
 		return manhattan;
 	}
 
@@ -112,11 +120,40 @@ public class Board {
 	public Iterable<Board> neighbors() {
 		List<Board> neighbors = new ArrayList<Board>();
 		int blankSpace = findBlankSpace();
-		neighbors.add(swap(blankSpace, blankSpace - 1));
-		neighbors.add(swap(blankSpace, blankSpace + 1));
-		neighbors.add(swap(blankSpace, blankSpace - N));
-		neighbors.add(swap(blankSpace, blankSpace + N));
+		int[] swapping = addNeighbors(blankSpace);
+		for (int i = 0; i < 4; i++) {
+			if (isValidPosition(blankSpace, swapping[i])) {
+				neighbors.add(swap(blankSpace, swapping[i]));
+			}
+		}
 		return neighbors;
+	}
+
+	private int[] addNeighbors(int blankSpace) {
+		int[] swapping = new int[4];
+		swapping[0] = blankSpace - 1;
+		swapping[1] = blankSpace + 1;
+		swapping[2] = blankSpace - N;
+		swapping[3] = blankSpace + N;
+		return swapping;
+	}
+
+	private boolean isValidPosition(int blankSpace, int adjacent) {
+		int blankRow = findRow(blankSpace);
+		int blankCol = findCol(blankSpace);
+		int adjacentRow = findRow(adjacent);
+		int adjacentCol = findCol(adjacent);
+
+		if (blankRow == 0 && blankSpace - 1 < blankRow) {
+			return false;
+		} else if (blankRow == N - 1 && adjacentRow > blankRow) {
+			return false;
+		} else if (blankCol == 0 && blankSpace - 1 == adjacent) {
+			return false;
+		} else if (blankCol == N - 1 && blankSpace + 1 == adjacent) {
+			return false;
+		}
+		return true;
 	}
 
 	// a board that is obtained by exchanging two adjacent blocks in the same
@@ -146,19 +183,18 @@ public class Board {
 		return -1;
 	}
 
-	private Board swap(int blankSpace, int adjacentSpace) {
+	// TODO need to check for out of bound elements
+	private Board swap(int blankSpace, int adjacentSpace)
+			throws IndexOutOfBoundsException {
 		Board b = new Board(cloneBoard());
 		int blankRow = findRow(blankSpace);
 		int blankCol = findCol(blankSpace);
 		int adjacentRow = findRow(adjacentSpace);
 		int adjacentCol = findCol(adjacentSpace);
-		try {
-			int temp = blocks[blankRow][blankCol];
-			b.blocks[blankRow][blankCol] = blocks[adjacentRow][adjacentCol];
-			b.blocks[adjacentRow][adjacentCol] = temp;
-		} catch (IndexOutOfBoundsException e) {
-			e.printStackTrace();
-		}
+		int temp = blocks[blankRow][blankCol];
+		b.blocks[blankRow][blankCol] = blocks[adjacentRow][adjacentCol];
+		b.blocks[adjacentRow][adjacentCol] = temp;
+		b.test();
 		return b;
 	}
 
@@ -186,6 +222,26 @@ public class Board {
 		System.out.println("Goal: " + isGoal());
 		System.out.println("hamming is: " + hamming());
 		System.out.println("manhattan is: " + manhattan() + "\n");
-		System.out.println("Twin " + twin().toString());
+		// System.out.println("Twin " + twin().toString());
+	}
+
+	@Override
+	public int compareTo(Board b2) {
+		int m1 = this.manhattan;
+		int m2 = b2.manhattan;
+		int h1 = this.hamming;
+		int h2 = b2.hamming;
+		if (m1 > m2) {
+			return 1;
+		} else if (m1 < m2) {
+			return -1;
+		} else if (m1 == m2) {
+			if (h1 > h2) {
+				return 1;
+			} else if (h1 < h2) {
+				return -1;
+			}
+		}
+		return 0;
 	}
 }
