@@ -19,11 +19,24 @@ public class Solver {
 		p.insert(initial);
 		System.out.println("+++Initial board+++");
 		initial.test();
-		for (Board b : initial.neighbors()) {
-			p.insert(b);
+		Board board = null;
+		p.insert(initial);
+		int moves = 0;
+		for (int i = 0; i < 6; i++) {
+			board = p.delMin();
+			board.setPriotity(moves);
+			for (Board b : board.neighbors()) {
+
+				System.out.println("Added");
+				b.test();
+				p.insert(b);
+
+			}
+			System.out.println("+++Last board+++");
+		
+			System.out.println("Iteration: " + i);
+			moves += 100;
 		}
-		System.out.println("+++Last board+++");
-		p.delMin().test();
 	}
 
 	// is the initial board solvable?

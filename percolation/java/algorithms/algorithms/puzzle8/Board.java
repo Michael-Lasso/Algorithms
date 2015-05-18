@@ -4,11 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import library.algorithms.In;
+import algorithms.constants.Constants;
+
 public class Board implements Comparable<Board> {
 	int[][] blocks;
 	int N;
 	int manhattan;
 	int hamming;
+	int priotity;
+
+	public int getPriotity() {
+		return priotity;
+	}
+
+	public void setPriotity(int priotity) {
+		this.priotity = priotity;
+	}
 
 	// construct a board from an N-by-N array of blocks (where blocks[i][j] =
 	// block in row i, column j)
@@ -104,7 +116,6 @@ public class Board implements Comparable<Board> {
 	// string representation of this board (in the output format specified
 	// below)
 	public String toString() {
-
 		StringBuilder s = new StringBuilder();
 		s.append(N + "\n");
 		for (int i = 0; i < N; i++) {
@@ -123,7 +134,11 @@ public class Board implements Comparable<Board> {
 		int[] swapping = addNeighbors(blankSpace);
 		for (int i = 0; i < 4; i++) {
 			if (isValidPosition(blankSpace, swapping[i])) {
-				neighbors.add(swap(blankSpace, swapping[i]));
+				int adjacent = swapping[i];
+				Board b = swap(blankSpace, adjacent);
+				//System.out.println("Added");
+				//b.test();
+				neighbors.add(b);
 			}
 		}
 		return neighbors;
@@ -148,9 +163,11 @@ public class Board implements Comparable<Board> {
 			return false;
 		} else if (blankRow == N - 1 && adjacentRow > blankRow) {
 			return false;
-		} else if (blankCol == 0 && blankSpace - 1 == adjacent) {
+		} else if (adjacentCol >= N || adjacentCol < 0 || adjacent <= 0
+				|| adjacent > (N * N)) {
 			return false;
-		} else if (blankCol == N - 1 && blankSpace + 1 == adjacent) {
+		} else if (blankCol == 0 && blankSpace - 1 == adjacent
+				|| (blankCol == N - 1 && blankSpace + 1 == adjacent)) {
 			return false;
 		}
 		return true;
@@ -186,15 +203,15 @@ public class Board implements Comparable<Board> {
 	// TODO need to check for out of bound elements
 	private Board swap(int blankSpace, int adjacentSpace)
 			throws IndexOutOfBoundsException {
-		Board b = new Board(cloneBoard());
+		int[][] board = cloneBoard();
 		int blankRow = findRow(blankSpace);
 		int blankCol = findCol(blankSpace);
 		int adjacentRow = findRow(adjacentSpace);
 		int adjacentCol = findCol(adjacentSpace);
 		int temp = blocks[blankRow][blankCol];
-		b.blocks[blankRow][blankCol] = blocks[adjacentRow][adjacentCol];
-		b.blocks[adjacentRow][adjacentCol] = temp;
-		b.test();
+		board[blankRow][blankCol] = blocks[adjacentRow][adjacentCol];
+		board[adjacentRow][adjacentCol] = temp;
+		Board b = new Board(board);
 		return b;
 	}
 
@@ -243,5 +260,16 @@ public class Board implements Comparable<Board> {
 			}
 		}
 		return 0;
+	}
+
+	public static void main(String[] args) {
+		In in = new In(Constants.PUZZLE);
+		int N = in.readInt();
+		int[][] blocks = new int[N][N];
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				blocks[i][j] = in.readInt();
+		Board initial = new Board(blocks);
+		initial.neighbors();
 	}
 }
