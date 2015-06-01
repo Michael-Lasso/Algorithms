@@ -136,8 +136,6 @@ public class Board implements Comparable<Board> {
 			if (isValidPosition(blankSpace, swapping[i])) {
 				int adjacent = swapping[i];
 				Board b = swap(blankSpace, adjacent);
-				//System.out.println("Added");
-				//b.test();
 				neighbors.add(b);
 			}
 		}
