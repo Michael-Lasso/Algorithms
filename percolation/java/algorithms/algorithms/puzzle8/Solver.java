@@ -19,10 +19,10 @@ public class Solver {
 		p.insert(initial);
 		System.out.println("+++Initial board+++");
 		initial.test();
-		Board board = null;
+		Board board = initial;
 		p.insert(initial);
 		int moves = 0;
-		for (int i = 0; i < 6; i++) {
+		while (!board.isGoal()) {
 			board = p.delMin();
 			board.setPriotity(moves);
 			for (Board b : board.neighbors()) {
@@ -33,8 +33,8 @@ public class Solver {
 
 			}
 			System.out.println("+++Last board+++");
-		
-			System.out.println("Iteration: " + i);
+			board.test();
+			System.out.println("Iteration: " + moves);
 			moves += 100;
 		}
 	}
