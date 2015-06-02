@@ -72,9 +72,9 @@ public class Honeycomb {
 		if (isLastLayer(vertex)) {
 			// do nothing
 		} else if (isOffSet(vertex)) {
-
+			// add 3
 		} else {
-
+			// add 2
 		}
 
 		return list;
@@ -99,10 +99,10 @@ public class Honeycomb {
 		}
 
 		// TODO
-		int extract = calculateLayerSize((int) layer);
+		int extract = calculateLayerSize((int) layer) + 1;
 		vertex = vertex - extract;
 		System.out.println(vertex + "/" + layer);
-		if (vertex % layer != 0) {
+		if (vertex % layer == 0) {
 			return true;
 		} else {
 			return false;
@@ -150,7 +150,7 @@ public class Honeycomb {
 	public static void main(String[] args) {
 		Honeycomb solution = new Honeycomb(Constants.HONEY_INPUT,
 				Constants.HONEY_WORDS);
-		System.out.println(solution.isOffSet());
+		System.out.println(solution.isOffSet(24));
 
 	}
 }
