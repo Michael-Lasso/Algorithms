@@ -43,13 +43,12 @@ public class Honeycomb {
 		return wordsMap;
 	}
 
-	private int calculateGraphSize(int layers) {
+	private int calculateLayerSize(int layers) {
 		this.layers = layers;
 		int size = 0;
 		for (int i = 1; i < layers; i++) {
 			size += 6 * i;
 		}
-		size++;
 		this.grapSize = size;
 		return size;
 	}
@@ -62,19 +61,21 @@ public class Honeycomb {
 			}
 			return list;
 		}
-		// TODO
+
 		int layer = findLayer(vertex);
-		
-		if (vertex == layer * 6) {
-			System.out.println("TEST");
-			int x = layer - 1;
-			System.out.println(x);
-			list.add((x * 6) + 1);
+		if (vertex == calculateLayerSize(layer + 1)) {
+			list.add(calculateLayerSize(layer) + 1);
 		} else {
 			list.add(vertex + 1);
 		}
 
-		// int v = vertex % 6;
+		if (isLastLayer(vertex)) {
+			// do nothing
+		} else if (isOffSet(vertex)) {
+
+		} else {
+
+		}
 
 		return list;
 
@@ -91,6 +92,27 @@ public class Honeycomb {
 		return sum;
 	}
 
+	private boolean isOffSet(int vertex) {
+		double layer = findLayer(vertex);
+		if (layer == 1) {
+			return true;
+		}
+
+		// TODO
+		int extract = calculateLayerSize((int) layer);
+		vertex = vertex - extract;
+		System.out.println(vertex + "/" + layer);
+		if (vertex % layer != 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isLastLayer(int vertex) {
+		return false;
+	}
+
 	private class HoneycombGraph extends Graph {
 		char[] characters;
 
@@ -99,7 +121,7 @@ public class Honeycomb {
 		}
 
 		HoneycombGraph(In in) {
-			this(calculateGraphSize(in.readInt()));
+			this(calculateLayerSize(in.readInt()) + 1);
 			characters = new char[graphSize()];
 			StringBuilder sb = new StringBuilder();
 			String[] allChars = in.readAllStrings();
@@ -111,7 +133,7 @@ public class Honeycomb {
 			this.characters = sb.toString().toCharArray();
 			for (int i = 0; i < characters.length; i++) {
 
-				//List<Integer> adjacents = findAdjacents(i);
+				// List<Integer> adjacents = findAdjacents(i);
 				// for (Integer adj : adjacents) {
 				// addEdge(i, adj);
 				// }
@@ -128,7 +150,7 @@ public class Honeycomb {
 	public static void main(String[] args) {
 		Honeycomb solution = new Honeycomb(Constants.HONEY_INPUT,
 				Constants.HONEY_WORDS);
-		System.out.println(solution.findAdjacents(18).toString());
+		System.out.println(solution.isOffSet());
 
 	}
 }
