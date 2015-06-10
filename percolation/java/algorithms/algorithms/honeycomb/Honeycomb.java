@@ -17,7 +17,7 @@ public class Honeycomb {
 	private BreadthFirstPaths bfs;
 	private int layers;
 	private Map<Character, List<String>> wordsMap;
-	private int grapSize;
+	private int grapSize = 61;
 
 	public int graphSize() {
 		return grapSize;
@@ -26,6 +26,8 @@ public class Honeycomb {
 	public Honeycomb(String honeycombTextFile, String wordsTextFile) {
 		this.graph = new HoneycombGraph(new In(honeycombTextFile));
 		this.wordsMap = populateMap(new In(wordsTextFile));
+		layers = findLayer(graph.getCharacters().length) - 2;
+		System.out.println("layers: " + layers);
 	}
 
 	private Map<Character, List<String>> populateMap(In in) {
@@ -44,12 +46,12 @@ public class Honeycomb {
 	}
 
 	private int calculateLayerSize(int layers) {
-		this.layers = layers;
+		// this.layers = layers;
 		int size = 0;
 		for (int i = 1; i < layers; i++) {
 			size += 6 * i;
 		}
-		this.grapSize = size;
+		// this.grapSize = size;
 		return size;
 	}
 
@@ -71,18 +73,34 @@ public class Honeycomb {
 
 		if (isLastLayer(vertex)) {
 			// do nothing
+			System.out.println("Do Nothing");
 		} else if (isOffSet(vertex)) {
 			// add 3
+			int pos = findNumfor3(vertex);
+			list.add(pos);
+			list.add(pos + 1);
+			if (pos == calculateLayerSize(layer - 1) + 1) {
+				System.out.println((calculateLayerSize(layer - 1) + 1) + "\t"
+						+ pos);
+				list.add(calculateLayerSize(layer));
+			} else {
+				System.out.println(pos - 1);
+				list.add(pos - 1);
+			}
 		} else {
 			// add 2
+			int pos = findNumfor2(vertex);
+			list.add(pos);
+			list.add(pos + 1);
 		}
 
 		return list;
 
 	}
 
-	private int findLayer(int vertex) {
+	public int findLayer(int vertex) {
 		int sum = 0;
+		System.out.println("sum: " + sum);
 		for (int i = 0; i < layers; i++) {
 			sum += 6 * i;
 			if (vertex <= sum) {
@@ -98,19 +116,51 @@ public class Honeycomb {
 			return true;
 		}
 
-		// TODO
 		int extract = calculateLayerSize((int) layer) + 1;
 		vertex = vertex - extract;
-		System.out.println(vertex + "/" + layer);
+
 		if (vertex % layer == 0) {
+			int start = calculateLayerSize((int) layer + 1) + 1;
+			int nextLayer = (int) layer + 1;
+			int multiplier = (vertex / (int) layer);
+			System.out.println(start + "\t" + nextLayer + "\t" + multiplier
+					+ "\t" + (start + (nextLayer * multiplier)));
 			return true;
 		} else {
+			int start = calculateLayerSize((int) layer + 1) + 1;
+			int quadrant = (vertex / (int) layer) * ((int) layer + 1);
+			int modifier = vertex % (int) layer;
+			System.out.println(start + quadrant + modifier);
 			return false;
 		}
 	}
 
+	// TODO calculate 2
+	private int findNumfor3(int vertex) {
+		double layer = findLayer(vertex);
+		int extract = calculateLayerSize((int) layer) + 1;
+		vertex = vertex - extract;
+		int start = calculateLayerSize((int) layer + 1) + 1;
+		int nextLayer = (int) layer + 1;
+		int multiplier = (vertex / (int) layer);
+		System.out.println(start + "\t" + nextLayer + "\t" + multiplier + "\t"
+				+ (start + (nextLayer * multiplier)));
+		return (start + (nextLayer * multiplier));
+	}
+
+	private int findNumfor2(int vertex) {
+		double layer = findLayer(vertex);
+		int extract = calculateLayerSize((int) layer) + 1;
+		vertex = vertex - extract;
+		int start = calculateLayerSize((int) layer + 1) + 1;
+		int quadrant = (vertex / (int) layer) * ((int) layer + 1);
+		int modifier = vertex % (int) layer;
+		return (start + quadrant + modifier);
+	}
+
 	private boolean isLastLayer(int vertex) {
-		return false;
+		System.out.println(vertex + "\t" + (layers));
+		return findLayer(vertex) == layers - 1;
 	}
 
 	private class HoneycombGraph extends Graph {
@@ -150,7 +200,7 @@ public class Honeycomb {
 	public static void main(String[] args) {
 		Honeycomb solution = new Honeycomb(Constants.HONEY_INPUT,
 				Constants.HONEY_WORDS);
-		System.out.println(solution.isOffSet(24));
+		System.out.println(solution.findLayer(20));
 
 	}
 }
