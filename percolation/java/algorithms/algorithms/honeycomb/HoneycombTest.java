@@ -22,10 +22,10 @@ public class HoneycombTest {
 	}
 
 	@Test
-	public void test() {
+	public void testFindLayer() {
 		int layer = solution.findLayer(20);
 		System.out.println(layer);
-		assertEquals(layer, 2);
+		assertEquals(3, layer);
 	}
 
 }
