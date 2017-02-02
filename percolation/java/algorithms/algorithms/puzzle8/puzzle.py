@@ -62,7 +62,21 @@ class Board:
             if(board.blocks!=self.blocks):
                 list.append(board)
         return list;
-
+		
+def solver(root, algorithm):
+	if algorithm == "bfs":
+		print("solve for bfs")
+	elif algorithm == "dfs":
+		print("solve for dfs")
+	elif algorithm == "a*":
+		print("solve for a*")
+	elif algorithm == "adl":
+		print("solve for adl")
+	else:
+		print("wrong algorithm")
+		
+def writeResultToFile(solver):
+	return;
 #Instantiates root board
 root = Board(sys.argv[2].split(","))
 
@@ -101,7 +115,5 @@ l = root.getNeighbors(moves)
 
 for x in l:
     print x.displayBoard()
-
-
-
-
+	
+print(sys.getsizeof(root))
