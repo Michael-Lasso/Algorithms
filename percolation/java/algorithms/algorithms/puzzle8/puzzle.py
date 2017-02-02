@@ -1,6 +1,23 @@
 #!/usr/bin/python3
 import sys, math, Queue
 
+class Stack():
+  
+  def __init__(self):
+    self.items = []
+    
+  def isEmpty(self):
+    return self.items == []
+    
+  def put(self, item):
+    return self.items.append(item)
+  
+  def get(self):
+    return self.items.pop()
+  
+  def getElements(self):
+    return self.items
+
 class Move:
     'Common base class for moves'
     
@@ -77,6 +94,13 @@ def solver(root, algorithm):
 		
 def writeResultToFile(solver):
 	return;
+	
+def isGoal():
+	n = (Board.dimension * Board.dimension)
+	list = []
+	for x in range(n):
+		list.append(x)
+	return list;
 #Instantiates root board
 root = Board(sys.argv[2].split(","))
 
@@ -93,23 +117,17 @@ right = Move("Right", 1)
 moves = [up, down, left, right]
 
 q = Queue.Queue(0)
+s = Stack()
 
 for x in moves:
     q.put(x)
+    s.put(x)
 
 while not q.empty():
     item = q.get()
-#print("item: ", item.move, item.n)
-
-#This would create first object of Employee class"
-#root.move(up)
-#root.displayBoard()
-#root.move(down)
-#root.displayBoard()
-#root.move(right)
-#root.displayBoard()
-#root.move(left)
-#root.displayBoard()
+    item2 = s.get()
+    print("queue: ", item.move, item.n)
+    print("stack: ", item2.move, item2.n)
 
 l = root.getNeighbors(moves)
 
@@ -117,3 +135,6 @@ for x in l:
     print x.displayBoard()
 	
 print(sys.getsizeof(root))
+
+goal = isGoal()
+print("Goal: ", goal)
