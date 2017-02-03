@@ -1,22 +1,23 @@
 #!/usr/bin/python3
 import sys, math, Queue
 
+#---------------------------------------Data Structures---------------------------------------#
 class Stack():
-  
-  def __init__(self):
-    self.items = []
     
-  def isEmpty(self):
-    return self.items == []
-    
-  def put(self, item):
-    return self.items.append(item)
-  
-  def get(self):
-    return self.items.pop()
-  
-  def getElements(self):
-    return self.items
+    def __init__(self):
+        self.items = []
+        
+    def empty(self):
+        return self.items == []
+            
+    def put(self, item):
+        return self.items.append(item)
+                        
+    def get(self):
+        return self.items.pop()
+                                
+    def getElements(self):
+        return self.items
 
 class Move:
     'Common base class for moves'
@@ -31,19 +32,19 @@ class Move:
 class Board:
     'Represents the state of a board'
     dimension = 0
-
+    
     def __init__(self, blocks):
         self.blocks = blocks
         Board.dimension = int(math.sqrt(len(self.blocks)))
-
+    
     def displayBoard(self):
-            print ("matrix",self.blocks)
-
+        print ("matrix",self.blocks)
+    
     def swap(self, x, y):
         tmp = self.blocks[x]
         self.blocks[x] = self.blocks[y+x]
         self.blocks[y+x] = tmp
-
+    
     def findBlank(self):
         for x in range(len(self.blocks)):
             if self.blocks[x] == '0':
@@ -54,7 +55,7 @@ class Board:
             return False
         else:
             return True
-
+                
     def isValidHorizontalSwap(self, blank, move):
         if move > 0:
             return (blank + move) % Board.dimension != 0;
@@ -79,61 +80,81 @@ class Board:
             if(board.blocks!=self.blocks):
                 list.append(board)
         return list;
-		
-def solver(root, algorithm):
-	if algorithm == "bfs":
-		print("solve for bfs")
-	elif algorithm == "dfs":
-		print("solve for dfs")
-	elif algorithm == "a*":
-		print("solve for a*")
-	elif algorithm == "adl":
-		print("solve for adl")
-	else:
-		print("wrong algorithm")
-		
-def writeResultToFile(solver):
-	return;
-	
-def isGoal():
-	n = (Board.dimension * Board.dimension)
-	list = []
-	for x in range(n):
-		list.append(x)
-	return list;
-#Instantiates root board
-root = Board(sys.argv[2].split(","))
 
-#algorithm
+
+#-------------------------------------End Data Structures-------------------------------------#
+
+#------------------------------------------Variables------------------------------------------#
+root = Board(sys.argv[2].split(","))
 algo = sys.argv[1]
 
-#This would create first object of Employee class"
-n = 3
 up = Move("Up", -Board.dimension)
 down = Move("Down", Board.dimension)
 left = Move("Left", -1)
 right = Move("Right", 1)
-
 moves = [up, down, left, right]
-
+#structures
 q = Queue.Queue(0)
 s = Stack()
+explored = set()
 
-for x in moves:
-    q.put(x)
-    s.put(x)
 
-while not q.empty():
-    item = q.get()
-    item2 = s.get()
-    print("queue: ", item.move, item.n)
-    print("stack: ", item2.move, item2.n)
+#---------------------------------------End of Variables---------------------------------------#
 
-l = root.getNeighbors(moves)
+#------------------------------------------Algorithms-----------------------------------------#
 
-for x in l:
-    print x.displayBoard()
-	
+def basic(root, structure):
+    l = root.getNeighbors(moves)
+    for x in l:
+        if not (x in explored):
+            explored.add(tuple(x.blocks))
+            structure.put(x)
+    while not structure.empty():
+        item = structure.get()
+        print("board: ", item.blocks)
+    print("solve for basic")
+    return;
+
+def ast(root, structure):
+    return;
+
+def ida(root, structure):
+    return;
+
+#--------------------------------------End ofAlgorithms---------------------------------------#
+
+#--------------------------------------------Solver-------------------------------------------#
+
+def solver(root, algorithm):
+    if algorithm == "bfs":
+        basic(root, s)
+    elif algorithm == "dfs":
+        basic(root, q)
+    elif algorithm == "ast":
+        print("solve for ast")
+    elif algorithm == "ida":
+        print("solve for ida")
+    else:
+        print("wrong algorithm")
+
+def writeResultToFile(solver):
+    return;
+
+def isGoal():
+    n = (Board.dimension * Board.dimension)
+    list = []
+    for x in range(n):
+        list.append(x)
+    return list;
+
+#----------------------------------------End of Solver----------------------------------------#
+
+#------------------------------------------Execution------------------------------------------#
+
+
+#This would create first object of Employee class"
+solver(root, algo)
+
 print(sys.getsizeof(root))
 
 goal = isGoal()
